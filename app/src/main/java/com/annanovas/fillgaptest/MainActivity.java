@@ -3,23 +3,21 @@ package com.annanovas.fillgaptest;
 import android.app.Activity;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 
 
 public class MainActivity extends Activity {
 
     TextView textView1, textView2, textView3;
 
-//    //Initializing string variable.
-//    String value = "This is a sentence";
-String speech = "Four score and seven years ago";
-//
-//    //Initializing char variable.
-//    char[] data;
-String[] result = speech.split("\\s");
+    String speech = "This is a string";
+
+    String[] result;
+    private ArrayList<WordObject> wordArrayList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +27,8 @@ String[] result = speech.split("\\s");
 //        textView1 = (TextView) findViewById(R.id.textView1);
 //        textView2 = (TextView) findViewById(R.id.textView2);
         textView3 = (TextView) findViewById(R.id.textView3);
+
+        wordArrayList = getAllWords();
 
 //        //Converting string to char array.
 //        data = value.toCharArray();
@@ -54,41 +54,64 @@ String[] result = speech.split("\\s");
 //            textView3.setText(textView3.getText() + "" + data[i]);
 
 
+//        for (int x = 0; x < result.length; x++) {
+//            System.out.println(result[x]);
+//
+//            textView3.setText(textView3.getText() + " " + result[x]);
+//
+//            Log.e("Result", result[x]);
+//
+//            Paint paint = new Paint();
+//            Rect bounds = new Rect();
+//
+//            int text_height = 0;
+//            int text_width = 0;
+//
+//            paint.setTypeface(Typeface.DEFAULT);// your preference here
+//            paint.setTextSize(25);// have this the same as your text size
+//
+//            //String text = "Some random text";
+//
+//            paint.getTextBounds(result[x], 0, result[x].length(), bounds);
+//
+//            text_height = bounds.height();
+//            text_width = bounds.width();
+//
+//            Log.e("Index", String.valueOf(text_height));
+//            Log.e("Index", String.valueOf(text_width));
+//
+//        }
 
-        for (int x=0; x<result.length; x++) {
+
+    }
+
+    private ArrayList<WordObject> getAllWords() {
+        ArrayList<WordObject> words = new ArrayList<>();
+        result = speech.split("\\s");
+        for (int x = 0; x < result.length; x++) {
             System.out.println(result[x]);
-
             Log.e("Result", result[x]);
-
             Paint paint = new Paint();
             Rect bounds = new Rect();
-
-            int text_height = 0;
-            int text_width = 0;
-
-            paint.setTypeface(Typeface.DEFAULT);// your preference here
-            paint.setTextSize(25);// have this the same as your text size
+            int word_height = 0;
+            int word_width = 0;
+//            paint.setTypeface(Typeface.DEFAULT);// your preference here
+//            paint.setTextSize(25);// have this the same as your text size
 
             //String text = "Some random text";
-
             paint.getTextBounds(result[x], 0, result[x].length(), bounds);
-
-            text_height =  bounds.height();
-            text_width =  bounds.width();
-
-            Log.e("Index", String.valueOf(text_height));
-            Log.e("Index", String.valueOf(text_width));
-
+            word_height = bounds.height();
+            word_width = bounds.width();
+            Log.e("Index", String.valueOf(word_height));
+            Log.e("Index", String.valueOf(word_width));
+            WordObject wordObject = new WordObject();
+            wordObject.setText(result[x]);
+            wordObject.setHeight(word_height);
+            wordObject.setWidth(word_width);
+            words.add(wordObject);
         }
-
-
-
-        }
-
-
-
-
-
+        return words;
+    }
 
 
 //        Paint p = new Paint();
@@ -120,7 +143,7 @@ String[] result = speech.split("\\s");
 //        Log.e("String Bounds", "firstWidth " + firstWidth + " secondWidth " + secondWidth);
 
 
-    }
+}
 
 
 
