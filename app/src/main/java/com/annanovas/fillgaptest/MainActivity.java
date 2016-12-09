@@ -1,6 +1,7 @@
 package com.annanovas.fillgaptest;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -8,20 +9,27 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Scroller;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class MainActivity extends Activity {
 
-    String speech = "First thing I should have ### is that charAt is a method and assigning value to it using equal sign won't do ### . If a string is immutable, charAt method, to make ### to the string object must receive an argument containing the new character. Unfortunately, string is immutable. To modify the string, I ### to use StringBuilder as suggested by Mr. Petar Ivanov.";
+    String speech = "Bangladesh ### our motherland";
 
     String[] result;
+    EditText ed;
+    List<EditText> allEds = new ArrayList<EditText>();
     private TextView tvWord;
     private LinearLayout layoutRoot;
     private RelativeLayout childRelativeLayout;
@@ -82,6 +90,15 @@ public class MainActivity extends Activity {
                         x = x + tvWord.getMeasuredWidth();
                     } else {
                         buttonFillGap = new Button(MainActivity.this);
+                        ed = new EditText(MainActivity.this);
+                        ed.setVisibility(View.GONE);
+//                        ed.post(new Runnable() {
+//                            public void run() {
+//                                ed.requestFocusFromTouch();
+//                                InputMethodManager lManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+//                                lManager.showSoftInput(ed, 0);
+//                            }
+//                        });
                         buttonFillGap.setText("Enter");
                         buttonFillGap.measure(0, 0);
                         buttonFillGap.getMeasuredWidth();
@@ -95,14 +112,38 @@ public class MainActivity extends Activity {
                             x = 0;
                         }
                         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);//(RelativeLayout.LayoutParams) tvWord.getLayoutParams();
+                        RelativeLayout.LayoutParams layoutParamsForEditText = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT, RelativeLayout.LayoutParams.FILL_PARENT);//(RelativeLayout.LayoutParams) tvWord.getLayoutParams();
                         layoutParams.setMargins(x, y, 0, 0);
-//
+                        layoutParamsForEditText.setMargins(x, y, 0, 0);
                         buttonFillGap.setLayoutParams(layoutParams);
+                        ed.setLayoutParams(layoutParams);
+                        ed.setWidth(350);
+                        ed.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                        ed.setSingleLine(true);
+                        /*
+                              This will provide Scroll option for EditText,
+                              but it will not show the scroll bar on EditText
+                        */
+                        ed.setScroller(new Scroller(getApplicationContext()));
+                        ed.setVerticalScrollBarEnabled(false);
+
                         childRelativeLayout.addView(buttonFillGap);
+                        childRelativeLayout.addView(ed);
 
                         x = x + buttonFillGap.getMeasuredWidth();
+
+                        buttonFillGap.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                showToast("Hi, i'm a toast.");
+                                ed.setVisibility(View.VISIBLE);
+                                ed.setEnabled(true);
+                                buttonFillGap.setVisibility(View.GONE);
+                            }
+                        });
                     }
                 }
+
 
                 layoutRoot.addView(childRelativeLayout, params);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -111,7 +152,16 @@ public class MainActivity extends Activity {
                     layoutRoot.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 }
             }
+
+            private Context getActivity() {
+                return null;
+            }
         });
+
+    }
+
+    private void showToast(String msg) {
+        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
     public int getRandomColor() {
